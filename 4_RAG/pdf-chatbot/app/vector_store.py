@@ -119,3 +119,10 @@ def search_similar_chunks(
         })
 
     return matches
+
+
+def delete_document_chunks(document_id: str) -> None:
+    if not document_id:
+        return
+    collection.delete(where={"document_id": document_id})
+

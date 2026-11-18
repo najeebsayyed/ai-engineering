@@ -51,7 +51,8 @@ def generate_answer(
             "source": source_label,
             "filename": filename,
             "page_number": page_number,
-            "chunk_id": chunk.get("id")
+            "chunk_id": chunk.get("id"),
+            "text": text[:350]
         })
 
     if not context_parts:
