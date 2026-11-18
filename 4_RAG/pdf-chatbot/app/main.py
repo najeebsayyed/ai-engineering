@@ -5,8 +5,9 @@ from uuid import uuid4
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from app.pdf_loader import extract_pdf_text
-
 from app.chunking import chunk_pages
+from app.embeddings import embed_chunks
+
 
 app = FastAPI(title="PDF Chatbot")
 
@@ -43,6 +44,7 @@ async def upload_pdf(file: UploadFile = File(...)):
     try:
         pages = extract_pdf_text(pdf_path)
         chunks = chunk_pages(pages)
+        embedded_chunks = embed_chunks(chunks)
     except Exception as exc:
         pdf_path.unlink(missing_ok=True)
         raise HTTPException(
@@ -53,15 +55,6 @@ async def upload_pdf(file: UploadFile = File(...)):
     full_text = "\n\n".join(page["text"] for page in pages)
 
     return {
-        "total_chunks": len(chunks),
-        "chunk_previews": [
-            {
-                "chunk_id": chunk["chunk_id"],
-                "page_number": chunk["page_number"],
-                "text": chunk["text"][:200],
-            }
-            for chunk in chunks[:10]
-        ],
         "filename": filename,
         "total_pages": len(pages),
         "pages_with_text": sum(bool(p["text"]) for p in pages),
@@ -71,5 +64,23 @@ async def upload_pdf(file: UploadFile = File(...)):
             "Text extracted successfully."
             if full_text.strip()
             else "No selectable text found. This may be a scanned PDF."
-        )
+        ),
+        "total_chunks": len(chunks),
+        "chunk_previews": [
+            {
+                "chunk_id": chunk["chunk_id"],
+                "page_number": chunk["page_number"],
+                "text": chunk["text"][:200],
+            }
+            for chunk in chunks[:10]
+        ],
+        "total_embeddings": len(embedded_chunks),
+        "embedding_dimensions": (
+            len(embedded_chunks[0]["embedding"])
+            if embedded_chunks else 0
+        ),
+        "embedding_preview": (
+            embedded_chunks[0]["embedding"][:5]
+            if embedded_chunks else []
+        ),
     }
