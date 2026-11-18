@@ -1,0 +1,25 @@
+[project]
+name = "pdf-chatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "najeebsayyed", email = "najeebsayyed777@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "chromadb>=1.5.9",
+    "fastapi>=0.164.0",
+    "openai>=3.55.1",
+    "pymupdf>=2.1",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.34",
+    "uvicorn>=0.54.0",
+]
+
+[project.scripts]
+pdf-chatbot = "pdf_chatbot:main"
+
+[build-system]
+requires = ["uv_build>=0.12.17,<0.13.0"]
+build-backend = "uv_build"
