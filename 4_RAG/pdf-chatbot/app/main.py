@@ -7,6 +7,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from app.pdf_loader import extract_pdf_text
 from app.chunking import chunk_pages
 from app.embeddings import embed_chunks
+from app.vector_store import store_chunks
 
 
 app = FastAPI(title="PDF Chatbot")
@@ -38,13 +39,19 @@ async def upload_pdf(file: UploadFile = File(...)):
     if not content.startswith(b"%PDF-"):
         raise HTTPException(400, "Invalid PDF file.")
 
-    pdf_path = UPLOAD_DIR / f"{uuid4().hex}.pdf"
+    document_id = uuid4().hex
+    pdf_path = UPLOAD_DIR / f"{document_id}.pdf"
     pdf_path.write_bytes(content)
 
     try:
         pages = extract_pdf_text(pdf_path)
         chunks = chunk_pages(pages)
         embedded_chunks = embed_chunks(chunks)
+        stored_count = store_chunks(
+            embedded_chunks,
+            document_id=document_id,
+            filename=filename
+)
     except Exception as exc:
         pdf_path.unlink(missing_ok=True)
         raise HTTPException(
@@ -83,4 +90,6 @@ async def upload_pdf(file: UploadFile = File(...)):
             embedded_chunks[0]["embedding"][:5]
             if embedded_chunks else []
         ),
+        "document_id": document_id,
+        "vector_records_stored": stored_count,
     }

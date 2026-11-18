@@ -3,4 +3,5 @@
 !.env.example
 .venv/
 __pycache__/
+vector_db/
 uploads/
