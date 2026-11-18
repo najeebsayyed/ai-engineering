@@ -12,9 +12,15 @@ from app.embeddings import embed_chunks
 from app.vector_store import store_chunks
 from app.embeddings import embed_query
 from app.vector_store import search_similar_chunks
+from app.rag import generate_answer
 
 
 class SearchRequest(BaseModel):
+    question: str = Field(min_length=1)
+    document_id: str | None = None
+    top_k: int = Field(default=5, ge=1, le=20)
+
+class ChatRequest(BaseModel):
     question: str = Field(min_length=1)
     document_id: str | None = None
     top_k: int = Field(default=5, ge=1, le=20)
@@ -128,3 +134,33 @@ def search_pdf(request: SearchRequest):
         "results": results
     }
 
+
+@app.post("/chat")
+def chat(request: ChatRequest):
+
+    if not request.question.strip():
+        raise HTTPException(400, "Question cannot be empty.")
+
+    # 1. Convert question into an embedding
+    query_embedding = embed_query(request.question)
+
+    # 2. Retrieve relevant PDF chunks
+    retrieved_chunks = search_similar_chunks(
+        query_embedding=query_embedding,
+        n_results=request.top_k,
+        document_id=request.document_id
+    )
+
+    # 3. Generate answer using retrieved context
+    result = generate_answer(
+        question=request.question,
+        retrieved_chunks=retrieved_chunks
+    )
+
+    # 4. Return answer and source information
+    return {
+        "question": request.question,
+        "answer": result["answer"],
+        "sources": result["sources"],
+        "retrieved_chunks": len(retrieved_chunks)
+    }
