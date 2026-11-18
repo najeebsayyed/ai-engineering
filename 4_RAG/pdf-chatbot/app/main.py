@@ -6,6 +6,8 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from app.pdf_loader import extract_pdf_text
 
+from app.chunking import chunk_pages
+
 app = FastAPI(title="PDF Chatbot")
 
 UPLOAD_DIR = Path("uploads")
@@ -40,6 +42,7 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     try:
         pages = extract_pdf_text(pdf_path)
+        chunks = chunk_pages(pages)
     except Exception as exc:
         pdf_path.unlink(missing_ok=True)
         raise HTTPException(
@@ -50,6 +53,15 @@ async def upload_pdf(file: UploadFile = File(...)):
     full_text = "\n\n".join(page["text"] for page in pages)
 
     return {
+        "total_chunks": len(chunks),
+        "chunk_previews": [
+            {
+                "chunk_id": chunk["chunk_id"],
+                "page_number": chunk["page_number"],
+                "text": chunk["text"][:200],
+            }
+            for chunk in chunks[:10]
+        ],
         "filename": filename,
         "total_pages": len(pages),
         "pages_with_text": sum(bool(p["text"]) for p in pages),
