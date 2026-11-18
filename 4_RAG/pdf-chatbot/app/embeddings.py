@@ -55,3 +55,17 @@ def embed_chunks(
             })
 
     return embedded_chunks
+
+
+def embed_query(query: str) -> list[float]:
+
+    if not query.strip():
+        raise ValueError("Query cannot be empty.")
+
+    response = client.embeddings.create(
+        model=MODEL,
+        input=query.strip()
+    )
+
+    return response.data[0].embedding
+
