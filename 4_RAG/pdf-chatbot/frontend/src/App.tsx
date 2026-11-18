@@ -1,13 +1,49 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MainLayout } from './components/layout/MainLayout';
 import { DashboardOverview } from './components/dashboard/DashboardOverview';
+import { UploadSection } from './components/upload/UploadSection';
+import { api } from './services/api';
 import type { ActiveTab, DocumentMetadata } from './types';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
-  const [documents] = useState<DocumentMetadata[]>([]);
+  const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [activeDocument, setActiveDocument] = useState<DocumentMetadata | null>(null);
-  const [backendOnline] = useState(true);
+  const [backendOnline, setBackendOnline] = useState(true);
+
+  // Initial load of documents & health check
+  useEffect(() => {
+    let mounted = true;
+
+    const checkServerAndDocs = async () => {
+      try {
+        await api.checkHealth();
+        if (mounted) setBackendOnline(true);
+        const docs = await api.listDocuments();
+        if (mounted) {
+          setDocuments(docs);
+          if (docs.length > 0 && !activeDocument) {
+            setActiveDocument(docs[0]);
+          }
+        }
+      } catch {
+        if (mounted) setBackendOnline(false);
+      }
+    };
+
+    checkServerAndDocs();
+    const interval = setInterval(checkServerAndDocs, 10000);
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleUploadSuccess = (newDoc: DocumentMetadata) => {
+    setDocuments((prev) => [newDoc, ...prev.filter((d) => d.document_id !== newDoc.document_id)]);
+    setActiveDocument(newDoc);
+  };
 
   return (
     <MainLayout
@@ -32,10 +68,10 @@ export function App() {
       )}
 
       {activeTab === 'upload' && (
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl border border-slate-200">
-          <h2 className="text-xl font-bold text-slate-900 mb-2">Upload PDF</h2>
-          <p className="text-sm text-slate-500">Upload interface coming right up.</p>
-        </div>
+        <UploadSection
+          onUploadSuccess={handleUploadSuccess}
+          onNavigate={(tab) => setActiveTab(tab)}
+        />
       )}
 
       {activeTab === 'chat' && (
