@@ -3,7 +3,7 @@
 > **Welcome to AI Engineering!**  
 > If you have ever wondered how modern AI assistants can read a 100-page company report or a complex textbook and answer questions with exact citations—without hallucinating—you are in the right place.
 >
-> This guide is written specifically for you as a beginner. We will walk through every concept step by step, using clear English, intuitive analogies, practical code examples, and architecture diagrams. Throughout this journey, we ground every concept in a real, functioning project: our **PDF Chatbot** located at [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot).
+> This guide is written specifically for you as a beginner. We will walk through every concept step by step, using clear English, intuitive analogies, practical code examples, and architecture diagrams. Throughout this journey, we ground every concept in a real, functioning project: our **PDF Chatbot** located at [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot).
 >
 > Let's embark on this journey from absolute zero to advanced production AI systems!
 
@@ -145,7 +145,7 @@ RAG is now standard across every major industry:
 2. **Customer Support:** A customer asks: *"How do I reset error code E-42 on my Model X dishwasher?"* The bot retrieves the specific troubleshooting table from the technical service manual.
 3. **Legal Document Discovery:** Lawyers upload thousands of discovery contracts and query: *"Which agreements contain an indemnification clause exceeding \$1,000,000?"*
 4. **Clinical Decision Support:** Doctors query recent clinical trial literature regarding specific drug interactions.
-5. **Personal PDF Assistants:** Like our [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) project, where you upload any PDF manual or paper and immediately start asking questions about its contents.
+5. **Personal PDF Assistants:** Like our [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) project, where you upload any PDF manual or paper and immediately start asking questions about its contents.
 
 ---
 
@@ -190,7 +190,7 @@ Every RAG system consists of **two distinct pipelines** that operate at differen
 
 ### Architectural Flowchart
 
-Here is how both pipelines work together in our [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) architecture:
+Here is how both pipelines work together in our [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) architecture:
 
 ```mermaid
 flowchart TD
@@ -335,7 +335,7 @@ OCR software analyzes the pixels of an image, identifies visual shapes (curves, 
 - Cloud OCR services: **Google Cloud Document AI**, **AWS Textract**, **Azure AI Vision**.
 
 > [!NOTE]
-> Our [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) project focuses on **native, text-based PDFs**. In [`app/main.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/main.py), if no text is extracted from an uploaded document, the system explicitly alerts the user:
+> Our [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) project focuses on **native, text-based PDFs**. In [`app/main.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/main.py), if no text is extracted from an uploaded document, the system explicitly alerts the user:
 > `"No selectable text found. This may be a scanned PDF."`
 
 ---
@@ -350,7 +350,7 @@ PyMuPDF is a Python binding for **MuPDF**, an extremely fast, lightweight C-base
 
 ### Inspecting Our Project's Implementation: `pdf_loader.py`
 
-Let's look at the actual code in our project at [`app/pdf_loader.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/pdf_loader.py):
+Let's look at the actual code in our project at [`app/pdf_loader.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/pdf_loader.py):
 
 ```python
 from pathlib import Path
@@ -511,7 +511,7 @@ Overlap:                           ◄──────►
 
 ### Inspecting Our Project's Implementation: `chunking.py`
 
-Let's examine how chunking is implemented in our [`app/chunking.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/chunking.py) file:
+Let's examine how chunking is implemented in our [`app/chunking.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/chunking.py) file:
 
 ```python
 def chunk_pages(
@@ -704,7 +704,7 @@ If you take the vector for "King", subtract the concept of "Maleness", and add t
 
 ### Embedding Models: Why We Use `text-embedding-3-small`
 
-In our [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) project, we use OpenAI's **`text-embedding-3-small`**. Here is how it compares to popular alternatives:
+In our [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) project, we use OpenAI's **`text-embedding-3-small`**. Here is how it compares to popular alternatives:
 
 | Model | Provider | Dimensions | Context Window | Relative Cost / Performance |
 | :--- | :--- | :--- | :--- | :--- |
@@ -732,7 +732,7 @@ Different embedding models map concepts to completely different coordinate space
 
 ### Inspecting Our Project's Implementation: `embeddings.py`
 
-Let's look at how embeddings are generated in [`app/embeddings.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/embeddings.py):
+Let's look at how embeddings are generated in [`app/embeddings.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/embeddings.py):
 
 ```python
 import os
@@ -940,7 +940,7 @@ When a search matches the vector, the database returns the original text snippet
 
 ### Inspecting Our Project's Implementation: `vector_store.py`
 
-In [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot), we use **ChromaDB** as an embedded persistent vector store. Let's inspect [`app/vector_store.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/vector_store.py):
+In [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot), we use **ChromaDB** as an embedded persistent vector store. Let's inspect [`app/vector_store.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/vector_store.py):
 
 ```python
 from pathlib import Path
@@ -1102,10 +1102,10 @@ def search_similar_chunks(
    **Answer:** It specifies what data to return with the search results (in our code: `"documents"`, `"metadatas"`, and `"distances"`).
 
 #### Practical Exercise
-Inspect the folder `C:\ai-engineering\4_RAG\pdf-chatbot\vector_db` on your machine. You will see ChromaDB's persistent files, including a `chroma.sqlite3` file and binary index folders. Open Python and run:
+Inspect the folder `C:\ai-engineering\4-rag\pdf-chatbot\vector_db` on your machine. You will see ChromaDB's persistent files, including a `chroma.sqlite3` file and binary index folders. Open Python and run:
 ```python
 import chromadb
-client = chromadb.PersistentClient(path=r"C:\ai-engineering\4_RAG\pdf-chatbot\vector_db")
+client = chromadb.PersistentClient(path=r"C:\ai-engineering\4-rag\pdf-chatbot\vector_db")
 coll = client.get_collection("pdf_chunks")
 print(f"Total chunks stored: {coll.count()}")
 ```
@@ -1271,7 +1271,7 @@ It represents the critical bridge connecting your persistent database to the gen
 
 ### The Retrieval Flow in Our PDF Chatbot
 
-Let's trace exactly how retrieval occurs when a user submits a question to [`app/main.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/main.py):
+Let's trace exactly how retrieval occurs when a user submits a question to [`app/main.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/main.py):
 
 ```
 User Query: "What is the maximum file size for uploads?"
@@ -1313,7 +1313,7 @@ CONS: If the answer requires facts from          CONS: High token cost; slower r
       multiple pages, the model misses it!             distracting noise causes hallucinations.
 ```
 
-In [`app/main.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/main.py), we set a default `top_k = 5`, with validation restricting it between 1 and 20:
+In [`app/main.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/main.py), we set a default `top_k = 5`, with validation restricting it between 1 and 20:
 
 ```python
 class ChatRequest(BaseModel):
@@ -1439,7 +1439,7 @@ A production-grade prompt consists of **four distinct structural layers**:
 
 ### Inspecting Our Project's Implementation: `rag.py`
 
-Let's inspect how prompt construction and LLM generation are implemented in [`app/rag.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/rag.py):
+Let's inspect how prompt construction and LLM generation are implemented in [`app/rag.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/rag.py):
 
 ```python
 import os
@@ -1620,7 +1620,7 @@ Review the prompt template in `app/rag.py`. Try modifying the instructions to co
 
 Now that we understand text extraction, chunking, embeddings, vector databases, similarity search, and prompt engineering, let's look at how all these pieces fit together into a unified, working system.
 
-Our reference implementation is located at [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot).
+Our reference implementation is located at [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot).
 
 ---
 
@@ -1958,7 +1958,7 @@ Draft 5 test question-and-answer pairs for a PDF document you own. Include 3 que
 
 ### Beyond Naive RAG
 
-The basic architecture we built in [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) is known in AI literature as **Naive RAG** (or Standard RAG):  
+The basic architecture we built in [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) is known in AI literature as **Naive RAG** (or Standard RAG):  
 `Extract ➔ Chunk ➔ Embed ➔ Index ➔ Query ➔ Retrieve ➔ Generate`.
 
 Naive RAG works wonderfully for clean, simple documents. However, enterprise documents often feature complex tables, jargon, multi-step queries, and ambiguous user phrasing.
@@ -2273,7 +2273,7 @@ Imagine an HR director and an intern using the same corporate chatbot. The inter
 ### 6. API Security and Rate Limiting
 
 A public-facing RAG endpoint is a target for abuse:
-- **File Upload Bombs:** An attacker uploads a 5 GB file or a compressed zip bomb designed to exhaust server RAM. Our project guards against this in [`app/main.py`](file:///C:/ai-engineering/4_RAG/pdf-chatbot/app/main.py) with `MAX_FILE_SIZE = 20 * 1024 * 1024` (20 MB limit) and magic-byte validation (`content.startswith(b"%PDF-")`).
+- **File Upload Bombs:** An attacker uploads a 5 GB file or a compressed zip bomb designed to exhaust server RAM. Our project guards against this in [`app/main.py`](file:///C:/ai-engineering/4-rag/pdf-chatbot/app/main.py) with `MAX_FILE_SIZE = 20 * 1024 * 1024` (20 MB limit) and magic-byte validation (`content.startswith(b"%PDF-")`).
 - **Rate Limiting:** Protect your endpoints using tools like **SlowAPI** or API Gateways (Cloudflare, AWS API Gateway) to limit users to, for example, 20 queries per minute.
 - **Cost Guardrails:** Set strict monthly budget alerts and hard billing limits inside your OpenAI or cloud dashboard to prevent runaway API fees.
 
@@ -2379,7 +2379,7 @@ flowchart LR
   - Setting up ChromaDB: persistent clients, collections, and metadata storage.
   - Basic similarity retrieval and Top-$K$ ranking.
   - Structured prompt engineering: injecting context, system personas, and negative constraints.
-* **Milestone Project:** Build our [`pdf-chatbot`](file:///C:/ai-engineering/4_RAG/pdf-chatbot) backend from scratch using FastAPI and ChromaDB.
+* **Milestone Project:** Build our [`pdf-chatbot`](file:///C:/ai-engineering/4-rag/pdf-chatbot) backend from scratch using FastAPI and ChromaDB.
 
 ---
 

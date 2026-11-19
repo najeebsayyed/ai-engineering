@@ -353,19 +353,19 @@ flowchart LR
     S7 --> S8["8. Evaluation & Tuning"]
 ```
 
-1. **PDF Text Extraction** ([app/pdf_loader.py](file:///c:/ai-engineering/4_RAG/pdf-chatbot/app/pdf_loader.py)):
+1. **PDF Text Extraction** ([app/pdf_loader.py](file:///c:/ai-engineering/4-rag/pdf-chatbot/app/pdf_loader.py)):
    Understand how PyMuPDF opens documents, iterates over pages, checks for encryption, and extracts clean sorted text strings.
-2. **Text Chunking & Overlap** ([app/chunking.py](file:///c:/ai-engineering/4_RAG/pdf-chatbot/app/chunking.py)):
+2. **Text Chunking & Overlap** ([app/chunking.py](file:///c:/ai-engineering/4-rag/pdf-chatbot/app/chunking.py)):
    Learn why sliding windows with overlap are used. Experiment with different `chunk_size` (e.g. 500 vs 1,000) and `overlap` values (e.g. 100 vs 200).
-3. **Embeddings** ([app/embeddings.py](file:///c:/ai-engineering/4_RAG/pdf-chatbot/app/embeddings.py)):
+3. **Embeddings** ([app/embeddings.py](file:///c:/ai-engineering/4-rag/pdf-chatbot/app/embeddings.py)):
    See how batching texts into OpenAI's embedding API converts strings into lists of floats representing semantic meaning.
-4. **Vector Databases** ([app/vector_store.py](file:///c:/ai-engineering/4_RAG/pdf-chatbot/app/vector_store.py)):
+4. **Vector Databases** ([app/vector_store.py](file:///c:/ai-engineering/4-rag/pdf-chatbot/app/vector_store.py)):
    Understand how ChromaDB creates a persistent collection, configures HNSW index spaces (`cosine`), and performs upserts.
 5. **Similarity Search & Filtering**:
    Study how `collection.query()` computes distances and filters by metadata (such as `document_id`).
-6. **Prompt Engineering & Grounding** ([app/rag.py](file:///c:/ai-engineering/4_RAG/pdf-chatbot/app/rag.py)):
+6. **Prompt Engineering & Grounding** ([app/rag.py](file:///c:/ai-engineering/4-rag/pdf-chatbot/app/rag.py)):
    Review the instructions provided to the LLM to prevent hallucinations, cite sources, and treat user documents as untrusted data.
-7. **Frontend Architecture** ([frontend/src/](file:///c:/ai-engineering/4_RAG/pdf-chatbot/frontend/src)):
+7. **Frontend Architecture** ([frontend/src/](file:///c:/ai-engineering/4-rag/pdf-chatbot/frontend/src)):
    Study how TypeScript interfaces, API services with timeouts, and responsive component hierarchies create a polished user experience.
 8. **Evaluation & Optimization**:
    Try measuring answer accuracy, response latency, and chunk retrieval quality. Experiment with reranking models or hybrid keyword search.
