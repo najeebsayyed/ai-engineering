@@ -1,5 +1,10 @@
 import io
+import os
 import unittest
+
+# Ensure unit tests can initialize even if local .env is not yet configured
+os.environ.setdefault("OPENAI_API_KEY", "mock-key-for-test-suite")
+
 from fastapi.testclient import TestClient
 
 from app.main import app
